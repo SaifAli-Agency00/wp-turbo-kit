@@ -1,0 +1,20 @@
+# Build artifacts
+build/
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Node (if you ever add a build step)
+node_modules/
+npm-debug.log
+
+# PHP
+*.log

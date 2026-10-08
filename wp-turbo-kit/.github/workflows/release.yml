@@ -1,0 +1,70 @@
+name: Release Plugin
+
+# Triggers automatically when you push a version tag like v1.0.1
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the code
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Get version from tag (e.g. v1.0.1 → 1.0.1)
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      # 3. Update version number in plugin files
+      - name: Update version in PHP file
+        run: |
+          sed -i "s/Version:           .*/Version:           ${{ steps.version.outputs.VERSION }}/" wp-turbo-kit.php
+          sed -i "s/define( 'WTK_VERSION', '.*' );/define( 'WTK_VERSION', '${{ steps.version.outputs.VERSION }}' );/" wp-turbo-kit.php
+
+      - name: Update version in readme.txt
+        run: |
+          sed -i "s/Stable tag:         .*/Stable tag:         ${{ steps.version.outputs.VERSION }}/" readme.txt
+
+      # 4. Build the plugin ZIP (exclude dev files)
+      - name: Build ZIP
+        run: |
+          mkdir -p build
+          zip -r build/wp-turbo-kit.zip . \
+            --exclude "*.git*" \
+            --exclude ".github/*" \
+            --exclude "build/*" \
+            --exclude "*.DS_Store" \
+            --exclude "__MACOSX/*" \
+            --exclude "*.md" \
+            --exclude "node_modules/*" \
+            --exclude "tests/*" \
+            --exclude "*.log"
+
+      # 5. Create GitHub Release with the ZIP attached
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "WP Turbo Kit v${{ steps.version.outputs.VERSION }}"
+          body: |
+            ## What's New in v${{ steps.version.outputs.VERSION }}
+
+            See the commit history for full details.
+
+            ### Installation
+            Download `wp-turbo-kit.zip` below and upload via **Plugins → Add New → Upload Plugin**.
+
+            ### Auto-Update
+            If you already have WP Turbo Kit installed, WordPress will notify you of this update automatically within 12 hours.
+          files: |
+            build/wp-turbo-kit.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
