@@ -12,7 +12,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       wp-turbo-kit
  * Domain Path:       /languages
- * Update URI:        https://github.com/YOUR_GITHUB_USERNAME/wp-turbo-kit
+ * Update URI:        https://github.com/SaifAli-Agency00/wp-turbo-kit
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -26,7 +26,7 @@ define( 'WTK_FILE',        __FILE__ );
 define( 'WTK_DIR',         plugin_dir_path( __FILE__ ) );
 define( 'WTK_URL',         plugin_dir_url( __FILE__ ) );
 define( 'WTK_SLUG',        'wp-turbo-kit' );
-define( 'WTK_GITHUB_USER', 'YOUR_GITHUB_USERNAME' );   // ← CHANGE THIS
+define( 'WTK_GITHUB_USER', 'SaifAli-Agency00' );   // ← CHANGE THIS
 define( 'WTK_GITHUB_REPO', 'wp-turbo-kit' );
 
 /* ============================================================
